@@ -5,6 +5,10 @@ set -euo pipefail
 echo "[shim] PWD=$(pwd)"
 echo "[shim] Listing root" && ls -la || true
 
+if [ -f package.json ]; then
+  echo "[shim] package.json present; scripts section:" && cat package.json || true
+fi
+
 if [ -f "scripts/netlify_build_debug.sh" ]; then
   echo "[shim] Running scripts/netlify_build_debug.sh"
   exec bash scripts/netlify_build_debug.sh
