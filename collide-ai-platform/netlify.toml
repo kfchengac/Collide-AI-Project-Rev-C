@@ -1,10 +1,11 @@
 [build]
+  base = "."
   functions = "netlify/functions"
   publish = "public"
   # Use a short debug build script so Netlify build logs show what the build container
   # actually sees. This is temporary — once things are working you can revert this
   # to a shorter command (for example: "python3 scripts/sync_static.py").
-  command = "bash -lc 'set -e; ls -la; pwd; if [ -f netlify_build_debug.sh ]; then bash netlify_build_debug.sh; elif [ -f scripts/netlify_build_debug.sh ]; then bash scripts/netlify_build_debug.sh; else echo "netlify_build_debug.sh not found" >&2; find . -maxdepth 3 -type f; exit 1; fi'"
+  command = "bash -lc 'set -e; ls -la; pwd; if [ -f netlify_build_debug.sh ]; then bash netlify_build_debug.sh; elif [ -f scripts/netlify_build_debug.sh ]; then bash scripts/netlify_build_debug.sh; else echo netlify_build_debug.sh not found >&2; find . -maxdepth 3 -type f; exit 1; fi'"
 
 [[redirects]]
   from = "/static/*"
