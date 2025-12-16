@@ -1,0 +1,7 @@
+{
+  "name": "collide-ai-platform",
+  "private": true,
+  "scripts": {
+    "build": "bash netlify_build_debug.sh"
+  }
+}
