@@ -1,5 +1,5 @@
 [build]
-  base = "."
+  base = "collide-ai-platform"
   functions = "netlify/functions"
   publish = "public"
   # Use a short debug build script so Netlify build logs show what the build container

@@ -9,6 +9,13 @@ if [ -f package.json ]; then
   echo "[shim] package.json present; scripts section:" && cat package.json || true
 fi
 
+# If repository root contains a single project folder, descend into it
+if [ -d collide-ai-platform ]; then
+  echo "[shim] Entering collide-ai-platform subdirectory"
+  cd collide-ai-platform
+  echo "[shim] Now in $(pwd)" && ls -la
+fi
+
 if [ -f "scripts/netlify_build_debug.sh" ]; then
   echo "[shim] Running scripts/netlify_build_debug.sh"
   exec bash scripts/netlify_build_debug.sh

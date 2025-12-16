@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "=== Netlify debug build script ==="
+echo "PWD: $(pwd)"
+echo "USER: $(whoami || true)"
+echo "Python: $(python3 --version || true)"
+echo "Node: $(node --version || true)"
+echo "--- Environment variables (filtered) ---"
+env | grep -E 'NETLIFY|GITHUB|CI|PYTHON' || true
+
+echo "\n--- Installing Python dependencies ---"
+python3 -m pip install --upgrade pip || true
+python3 -m pip install -r requirements.txt
+
+echo "\n--- Running static sync ---"
+python3 scripts/sync_static.py || true
+
+echo "\n--- Ensuring public/index.html exists ---"
+mkdir -p public
+if [ ! -f public/index.html ]; then
+  cat > public/index.html <<'EOF'
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COLLIDE AI</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main>
+    <h1>COLLIDE AI</h1>
+    <p>This is a placeholder homepage. Static assets are under /static/. API is served via Netlify Function /</p>
+    <p><a href="/.netlify/functions/app">Go to Flask app function</a></p>
+  </main>
+</body>
+</html>
+EOF
+fi
+
+echo "\n--- Root listing ---"
+ls -la
+
+echo "\n--- netlify/functions listing ---"
+if [ -d netlify/functions ]; then
+  ls -la netlify/functions || true
+  echo "\n--- Show a short head of python functions ---"
+  for f in netlify/functions/*.py; do
+    echo "---- $f ----"
+    head -n 60 "$f" || true
+  done
+else
+  echo "netlify/functions directory not found"
+fi
+
+echo "\n--- public listing ---"
+ls -la public || true
+
+echo "\n--- Finished debug build script ---"
+exit 0
